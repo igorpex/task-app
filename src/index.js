@@ -1,17 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import '@atlaskit/css-reset';
+import initialData from './initial-data';
+import Column from './column';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+function App() {
+  const [state, setState] = useState(initialData);
+    return state.columnOrder.map(columnId => {
+      const column = state.columns[columnId];
+      const tasks = column.taskIds.map(taskId => state.tasks[taskId]);
+      // return column.title;
+      return <Column key={column.id} column={column} tasks={tasks} />;
+    });
+}
+
 root.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
