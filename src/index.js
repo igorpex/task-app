@@ -12,6 +12,14 @@ const Container = styled.div`
   display: flex;
 `;
 
+class InnerList extends React.PureComponent {
+  render() {
+    const { column, taskMap, index } = this.props;
+    const tasks = column.taskIds.map(taskId => taskMap[taskId]);
+    return <Column column={column} tasks={tasks} index={index} />;
+  }
+}
+
 function App() {
   const [state, setState] = useState(initialData);
   
@@ -47,7 +55,6 @@ function App() {
 
     // Moving inside of the same list
     if (start === finish) {
-      console.log('start:', start);
       const newTaskIds = Array.from(start.taskIds);
       newTaskIds.splice(source.index, 1);
       newTaskIds.splice(destination.index, 0, draggableId);
@@ -100,9 +107,17 @@ function App() {
           >
             {state.columnOrder.map((columnId, index) => {
               const column = state.columns[columnId];
-              const tasks = column.taskIds.map(taskId => state.tasks[taskId]);
-              return <Column key={column.id} column={column} tasks={tasks} index={index}/>;
-            })}
+              
+              return (
+                <InnerList
+                  key={column.id}
+                  column={column}
+                  index={index}
+                  taskMap={state.tasks}
+                />
+              );
+            }
+            )}
             {provided.placeholder}
           </Container>
         )}
